@@ -6,7 +6,7 @@ export const MetaMaskContext = React.createContext(null)
 
 export const MetaMaskProvider = ({ children }) => {
     // Gather important resources for connecting with MetaMask.
-    const { activate, account, active, deactivate } = useWeb3React()
+    const { activate, account, active, deactivate, chainId } = useWeb3React()
 
     const [isActive, setIsActive] = useState(false)
     const [shouldDisable, setShouldDisable] = useState(false) // Should disable connect button while connecting to MetaMask
@@ -30,6 +30,7 @@ export const MetaMaskProvider = ({ children }) => {
     }, [handleIsActive])
 
     // Connect to MetaMask wallet
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const connect = async () => {
         console.log('Connecting to MetaMask...')
         setShouldDisable(true)
@@ -43,6 +44,7 @@ export const MetaMaskProvider = ({ children }) => {
     }
 
     // Disconnect from Metamask wallet
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const disconnect = async () => {
         console.log('Disconnecting wallet from App...')
         try {
@@ -59,9 +61,10 @@ export const MetaMaskProvider = ({ children }) => {
             isLoading,
             connect,
             disconnect,
-            shouldDisable
+            shouldDisable,
+            chainId,
         }),
-        [isActive, isLoading, shouldDisable, account]
+        [isActive, account, isLoading, connect, disconnect, shouldDisable, chainId]
     )
 
     return <MetaMaskContext.Provider value={values}>{children}</MetaMaskContext.Provider>
